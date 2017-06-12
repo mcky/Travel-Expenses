@@ -9,7 +9,10 @@ import 'firebase/database'
 import FirebaseWrapper from './FirebaseWrapper'
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import Paper from 'material-ui/Paper'
+
 import ExpenseDateGroups from './ExpenseDateGroup'
+import ExpenseMeta from './ExpenseMeta'
 
 const config = renameKeysBy(replace('REACT_APP_', ''), process.env)
 
@@ -20,7 +23,13 @@ firebase.initializeApp({
 })
 
 class App extends Component {
+	state = {
+		initialBudget: config.INITIAL_BUDGET,
+		dailyBudget: config.DAILY_BUDGET,
+	}
+
 	render() {
+		const { initialBudget, dailyBudget } = this.state
 		const { expenses } = this.props
 
 		const dateGroupings = pipe(
@@ -32,7 +41,28 @@ class App extends Component {
 		return (
 			<div className="App">
 				<MuiThemeProvider>
-					<ExpenseDateGroups {...{ dateGroupings }} />
+					<div>
+						<ExpenseDateGroups
+							{...{ dateGroupings }}
+							style={{ paddingBottom: 65 }}
+						/>
+
+						<Paper
+							zDepth={3}
+							style={{
+								position: 'fixed',
+								bottom: 0,
+								width: '100%',
+								padding: 14,
+								backgroundColor: 'rgb(0, 188, 212)',
+								color: 'white',
+							}}
+						>
+							<ExpenseMeta
+								{...{ expenses, dateGroupings, initialBudget, dailyBudget }}
+							/>
+						</Paper>
+					</div>
 				</MuiThemeProvider>
 			</div>
 		)
