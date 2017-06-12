@@ -15,6 +15,7 @@ import MenuItem from 'material-ui/MenuItem'
 import './ExpenseForm.css'
 
 const fields = ['amount', 'description', 'currency', 'exchangeRate', 'date']
+const allCurrencies = ['GBP', 'EUR', 'HRK', 'LEK', 'RSD', 'MKD', 'BAM', 'BYR']
 
 const getLastExchangeRate = (currency, expenses) =>
 	R.pipe(
@@ -125,6 +126,10 @@ class ExpenseForm extends Component {
 			/>,
 		]
 
+		const currencies = R.pipe(R.concat(allCurrencies), R.uniq)(
+			this.state.currencyList,
+		)
+
 		const fullWidth = { width: '100%' }
 		const requiredField = {
 			validators: ['required'],
@@ -175,7 +180,7 @@ class ExpenseForm extends Component {
 						onChange={this.handleCurrencyChange}
 						style={fullWidth}
 					>
-						{this.state.currencyList.map(currency => (
+						{currencies.map(currency => (
 							<MenuItem
 								value={currency}
 								primaryText={currency}
