@@ -27,9 +27,9 @@ const addExpenses = (worksheet, expenses) => {
 		.then(() => worksheet.setHeaderRow(headerRow))
 		.then(() =>
 			worksheet.getCells({ 'return-empty': true }).then(cells => {
-				expenses.map(R.values).forEach((expense, i) => {
+				expenses.forEach((expense, i) => {
 					return cells.filter(cell => cell.row === i + 2).forEach((cell, j) => {
-						cell.value = expense[j]
+						cell.value = R.propOr('', headerRow[j], expense)
 					})
 				})
 
