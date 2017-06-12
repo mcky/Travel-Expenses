@@ -10,7 +10,7 @@ const addExpenses = (worksheet, expenses) => {
 	const headerRow = R.pipe(R.head, R.keys, R.sortBy(R.toLower))(expenses)
 
 	return worksheet
-		.resize({ colCount: headerRow.length, rowCount: expenses.length })
+		.resize({ colCount: headerRow.length, rowCount: expenses.length + 1 })
 		.then(() => worksheet.setHeaderRow(headerRow))
 		.then(() =>
 			worksheet.getCells({ 'return-empty': true }).then(cells => {
