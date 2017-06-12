@@ -26,9 +26,15 @@ const addExpenses = (worksheet, expenses) => {
 		.resize({ colCount: headerRow.length, rowCount: expenses.length })
 		.then(() => worksheet.setHeaderRow(headerRow))
 		.then(() =>
-			expenses
-				.map(expense => () => worksheet.addRow(expense))
-				.reduce((prev, curr) => prev.then(curr), Promise.resolve())
+			worksheet.getCells({ 'return-empty': true }).then(cells => {
+				expenses.map(R.values).forEach((expense, i) => {
+					return cells.filter(cell => cell.row === i + 2).forEach((cell, j) => {
+						cell.value = expense[j]
+					})
+				})
+
+				return worksheet.bulkUpdateCells(cells)
+			})
 		)
 }
 
