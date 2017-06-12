@@ -1,0 +1,26 @@
+// Fixes for material ui dialog on mobile
+
+.ExpenseDialog {
+  padding: 0!important;
+}
+
+.ExpenseDialog > div,
+.ExpenseDialog__content {
+  height: 100%;
+}
+
+.ExpenseDialog__content {
+  height: 100%!important;
+  width: 100%!important;
+  transform: none!important;
+}
+
+.ExpenseDialog__content > div {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.ExpenseDialog__body {
+  overflow-y: scroll!important;
+}

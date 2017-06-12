@@ -12,6 +12,8 @@ import TextField from 'react-material-ui-form-validator/lib/TextValidator'
 import SelectField from 'material-ui/SelectField'
 import MenuItem from 'material-ui/MenuItem'
 
+import './ExpenseForm.css'
+
 const fields = ['amount', 'description', 'currency', 'exchangeRate', 'date']
 
 const getLastExchangeRate = (currency, expenses) =>
@@ -137,6 +139,9 @@ class ExpenseForm extends Component {
 				onRequestClose={this.props.handleClose}
 				repositionOnUpdate={false}
 				autoDetectWindowHeight={false}
+				className="ExpenseDialog"
+				contentClassName="ExpenseDialog__content"
+				bodyClassName="ExpenseDialog__body"
 			>
 				<Form
 					ref="form"
