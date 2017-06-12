@@ -19,6 +19,11 @@ function FirebaseWrapper(WrappedComponent, firebase) {
 		componentDidMount() {
 			this.refreshExpenses()
 
+			const updatesList = this.getPendingUpdates()
+			if (updatesList.length > 0) {
+				R.map(this.updateFirebase, updatesList)
+			}
+
 			database.ref('/expenses/').on('value', snapshot => {
 				localStorage.setItem('lastSnapshot', JSON.stringify(snapshot.val()))
 				this.refreshExpenses()
@@ -32,6 +37,29 @@ function FirebaseWrapper(WrappedComponent, firebase) {
 		}
 
 		getPendingUpdates = () => JSON.parse(localStorage.getItem('updates')) || []
+
+		updateFirebase = updates => {
+			return database.ref().update(updates).then(() => {
+				const cachedUpdates = R.pipe(
+					this.getPendingUpdates,
+					R.reject(R.equals(updates)),
+					JSON.stringify,
+				)()
+
+				localStorage.setItem('updates', cachedUpdates)
+			})
+		}
+
+		updateAndCache = updates => {
+			const allUpdates = this.getPendingUpdates().concat(updates)
+			localStorage.setItem('updates', JSON.stringify(allUpdates))
+
+			if (!this.state.online) {
+				this.refreshExpenses()
+			}
+
+			return this.updateFirebase(updates)
+		}
 
 		refreshExpenses = () => {
 			return this.getExpenses().then(expenses => {
@@ -64,11 +92,22 @@ function FirebaseWrapper(WrappedComponent, firebase) {
 				.then(sortByTimestamp)
 		}
 
+		addExpense = item => {
+			var key = database.ref('expenses').child('posts').push().key
+
+			const updates = {
+				[`expenses/${key}`]: item,
+			}
+
+			return this.updateAndCache(updates)
+		}
+
 		render() {
 			return (
 				<WrappedComponent
 					{...this.props}
 					expenses={this.state.expenses}
+					addExpense={this.addExpense}
 				/>
 			)
 		}

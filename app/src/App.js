@@ -9,9 +9,12 @@ import 'firebase/database'
 import FirebaseWrapper from './FirebaseWrapper'
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import FloatingActionButton from 'material-ui/FloatingActionButton'
+import ContentAdd from 'material-ui/svg-icons/content/add'
 import Paper from 'material-ui/Paper'
 
 import ExpenseDateGroups from './ExpenseDateGroup'
+import ExpenseForm from './ExpenseForm'
 import ExpenseMeta from './ExpenseMeta'
 
 const config = renameKeysBy(replace('REACT_APP_', ''), process.env)
@@ -26,6 +29,20 @@ class App extends Component {
 	state = {
 		initialBudget: config.INITIAL_BUDGET,
 		dailyBudget: config.DAILY_BUDGET,
+		expenseFormVisible: false,
+	}
+
+	addExpense = expense => {
+		this.props.addExpense(expense)
+		this.handleFormClose()
+	}
+
+	handleFormOpen = () => {
+		this.setState({ expenseFormVisible: true })
+	}
+
+	handleFormClose = () => {
+		this.setState({ expenseFormVisible: false })
 	}
 
 	render() {
@@ -42,10 +59,26 @@ class App extends Component {
 			<div className="App">
 				<MuiThemeProvider>
 					<div>
+						<ExpenseForm
+							handleSubmit={this.addExpense}
+							expenses={expenses}
+							handleOpen={this.handleFormOpen}
+							handleClose={this.handleFormClose}
+							open={this.state.expenseFormVisible}
+						/>
+
 						<ExpenseDateGroups
 							{...{ dateGroupings }}
 							style={{ paddingBottom: 65 }}
 						/>
+
+						<FloatingActionButton
+							onTouchTap={this.handleFormOpen}
+							zDepth={3}
+							style={{ position: 'fixed', bottom: 80, right: 20 }}
+						>
+							<ContentAdd />
+						</FloatingActionButton>
 
 						<Paper
 							zDepth={3}
