@@ -6,19 +6,6 @@ const promisify = require('es6-promisify')
 const promisifyMethods = obj =>
 	R.pipe(R.filter(R.is(Function)), R.map(promisify), R.mergeDeepRight(obj))(obj)
 
-const clearSheet = worksheet =>
-	worksheet
-		.getCells()
-		.then(cells =>
-			cells.map(cell => {
-				cell.value = 0
-				return cell
-			})
-		)
-		.then(cells => worksheet.bulkUpdateCells(cells))
-		.then(() => worksheet.resize({ colCount: 1, rowCount: 1 }))
-		.then(R.always(worksheet))
-
 const addExpenses = (worksheet, expenses) => {
 	const headerRow = R.pipe(R.head, R.keys, R.sortBy(R.toLower))(expenses)
 
@@ -56,7 +43,6 @@ exports.updateExpenseSpreadsheet = functions.database
 				R.pipe(R.prop('worksheets'), R.find(R.propEq('title', worksheet_name)))
 			)
 			.then(promisifyMethods)
-			.then(clearSheet)
 			.then(worksheet => addExpenses(worksheet, expenses))
 			.catch(console.log)
 	})
