@@ -1,47 +1,27 @@
 import React, { Component } from 'react'
 
-import { pipe, defaultTo, groupBy, toPairs } from 'ramda'
+import { pipe, replace, defaultTo, groupBy, toPairs } from 'ramda'
 import formatDate from 'date-fns/format'
+import { renameKeysBy } from './utils'
+
+import firebase from 'firebase/app'
+import 'firebase/database'
+import FirebaseWrapper from './FirebaseWrapper'
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import ExpenseDateGroups from './ExpenseDateGroup'
 
-const sampleExpenses = [
-	{
-		amount: '101.96',
-		category: 'Long distance travel',
-		city: 'London -> Dubrovnik',
-		country: 'England -> Croatia',
-		currency: 'GBP',
-		date: '2017-05-18',
-		description: 'Flight',
-		exchangeRate: '1',
-	},
-	{
-		amount: '80',
-		category: 'Local travel',
-		city: 'Dubrovnik',
-		country: 'Croatia',
-		currency: 'HRK',
-		date: '2017-05-18',
-		description: 'Dubrovnik airport transfer',
-		exchangeRate: '8.59',
-	},
-	{
-		amount: '28',
-		category: 'Accomodation',
-		city: 'Dubrovnik',
-		country: 'Croatia',
-		currency: 'GBP',
-		date: '2017-05-18',
-		description: 'Dubrovnik airbnb',
-		exchangeRate: '1',
-	},
-]
+const config = renameKeysBy(replace('REACT_APP_', ''), process.env)
+
+firebase.initializeApp({
+	apiKey: config.FIREBASE_API_KEY,
+	databaseURL: config.FIREBASE_DATABASE_URL,
+	projectId: config.FIREBASE_PROJECT_ID,
+})
 
 class App extends Component {
 	render() {
-		const expenses = sampleExpenses
+		const { expenses } = this.props
 
 		const dateGroupings = pipe(
 			defaultTo([]),
@@ -59,4 +39,4 @@ class App extends Component {
 	}
 }
 
-export default App
+export default FirebaseWrapper(App, firebase)
