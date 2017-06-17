@@ -9,6 +9,11 @@ import {
 	TableRowColumn,
 } from 'material-ui/Table'
 
+import IconMenu from 'material-ui/IconMenu'
+import MenuItem from 'material-ui/MenuItem'
+import IconButton from 'material-ui/IconButton'
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
+
 const ExpenseList = props => {
 	return (
 		<Table selectable={false}>
@@ -16,14 +21,27 @@ const ExpenseList = props => {
 				<TableRow>
 					<TableHeaderColumn key={1}>Amount</TableHeaderColumn>
 					<TableHeaderColumn key={2}>Description</TableHeaderColumn>
+					<TableHeaderColumn key={3} />
 				</TableRow>
 			</TableHeader>
 
 			<TableBody displayRowCheckbox={false}>
 				{props.items.map(item => (
 					<TableRow key={item._id}>
-						<TableRowColumn>{item.amount} {item.currency}</TableRowColumn>
+						<TableRowColumn>
+							{item.amount} {item.currency}
+						</TableRowColumn>
+
 						<TableRowColumn>{item.description}</TableRowColumn>
+
+						<TableRowColumn style={{ float: 'right' }}>
+							<IconMenu
+								onItemTouchTap={() => props.removeExpense(item)}
+								iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+							>
+								<MenuItem primaryText="Remove" />
+							</IconMenu>
+						</TableRowColumn>
 					</TableRow>
 				))}
 			</TableBody>

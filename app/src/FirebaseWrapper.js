@@ -102,12 +102,18 @@ function FirebaseWrapper(WrappedComponent, firebase) {
 			return this.updateAndCache(updates)
 		}
 
+		removeExpense = expense =>
+			this.updateAndCache({
+				[`/expenses/${expense._id}`]: null,
+			})
+
 		render() {
 			return (
 				<WrappedComponent
 					{...this.props}
 					expenses={this.state.expenses}
 					addExpense={this.addExpense}
+					removeExpense={this.removeExpense}
 				/>
 			)
 		}

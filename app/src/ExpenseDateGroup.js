@@ -17,7 +17,7 @@ const ExpenseDateGroup = props => {
 				showExpandableButton={true}
 			/>
 			<CardText expandable={true} style={{ padding: 0 }}>
-				<ExpenseList items={items} />
+				<ExpenseList items={items} removeExpense={props.removeExpense} />
 			</CardText>
 		</Card>
 	)
@@ -32,6 +32,7 @@ const ExpenseDateGroups = props => {
 					<ExpenseDateGroup
 						{...{ items, date }}
 						key={date}
+						removeExpense={props.removeExpense}
 						initiallyExpanded={isLast}
 					/>
 				)

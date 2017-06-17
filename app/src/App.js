@@ -37,6 +37,8 @@ class App extends Component {
 		this.handleFormClose()
 	}
 
+	removeExpense = this.props.removeExpense
+
 	handleFormOpen = () => {
 		this.setState({ expenseFormVisible: true })
 	}
@@ -69,6 +71,7 @@ class App extends Component {
 
 						<ExpenseDateGroups
 							{...{ dateGroupings }}
+							removeExpense={this.removeExpense}
 							style={{ paddingBottom: 65 }}
 						/>
 
