@@ -19,9 +19,9 @@ const ExpenseList = props => {
 		<Table selectable={false}>
 			<TableHeader adjustForCheckbox={false} displaySelectAll={false}>
 				<TableRow>
-					<TableHeaderColumn key={1}>Amount</TableHeaderColumn>
-					<TableHeaderColumn key={2}>Description</TableHeaderColumn>
-					<TableHeaderColumn key={3} />
+					{['Amount', 'Description', ''].map((header, i) => (
+						<TableHeaderColumn key={i}>{header}</TableHeaderColumn>
+					))}
 				</TableRow>
 			</TableHeader>
 
